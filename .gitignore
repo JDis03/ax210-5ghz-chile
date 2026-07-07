@@ -1,0 +1,14 @@
+# Build artifacts
+hostapd-lar/src/
+hostapd-lar/pkg/
+hostapd-lar/*.pkg.tar.zst
+hostapd-lar/hostap/
+
+# Editor files
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
