@@ -81,22 +81,82 @@ modprobe iwlmvm lar_disable=1
   → Canales 5 GHz disponibles ✅
 ```
 
-## 📡 Canales 5 GHz verificados
+## ⚙️ Configuraciones recomendadas
 
-| Canal | Frecuencia | Ancho | Notas |
-|-------|-----------|-------|-------|
-| 36-48 | 5180-5240 MHz | 80 MHz | Sin DFS |
-| 52-64 | 5260-5320 MHz | 80 MHz | DFS |
-| 149-165 | 5735-5835 MHz | 80 MHz | Sin DFS |
-| 1-233 | 5945-6425 MHz | 320 MHz | WiFi 6E |
+### Básica: 5 GHz 40 MHz + WiFi 6 (recomendado)
+Funciona con LAR activo (no requiere parche del kernel). 40 MHz estables.
+
+```conf
+hw_mode=a
+channel=149
+ht_capab=[HT40+]
+ieee80211n=1
+ieee80211ac=1
+ieee80211ax=1
+```
+
+### Intermedio: 5 GHz 80 MHz + WiFi 6
+Requiere que el firmware permita 80 MHz en tu región (probado en Chile con LAR
+no siempre lo permite). Si no funciona, usar 40 MHz.
+
+```conf
+hw_mode=a
+channel=149
+ht_capab=[HT40+]
+vht_oper_chwidth=1
+vht_oper_centr_freq_seg0_idx=155
+ieee80211n=1
+ieee80211ac=1
+ieee80211ax=1
+```
+
+### Avanzado: kernel patch + 80/160 MHz
+Desactiva LAR por completo compilando el kernel con
+`iwlwifi-lar-disable-zen7.1.2.patch`. El kernel controla el dominio regulatorio
+y puedes usar cualquier ancho de canal.
+
+```conf
+hw_mode=a
+channel=36
+ht_capab=[HT40+]
+vht_oper_chwidth=2            # 160 MHz
+vht_oper_centr_freq_seg0_idx=50   # centro para canal 36-64
+ieee80211n=1
+ieee80211ac=1
+ieee80211ax=1
+```
+
+### WiFi 6E (6 GHz)
+Requiere kernel patch + firmware compatible.
+
+```conf
+hw_mode=a
+channel=1                     # canal 6Ghz
+ht_capab=[HT40+]
+vht_oper_chwidth=1
+vht_oper_centr_freq_seg0_idx=1
+ieee80211n=1
+ieee80211ac=1
+ieee80211ax=1
+```
+
+## 📡 Canales 5 GHz
+
+| Banda | Canales | Frecuencia | Ancho máx | DFS |
+|-------|---------|-----------|-----------|-----|
+| UNII-1 | 36-48 | 5180-5240 MHz | 80 MHz | ❌ |
+| UNII-2 | 52-64 | 5260-5320 MHz | 80 MHz | ⚠️ |
+| UNII-2e | 100-144 | 5500-5720 MHz | 160 MHz | ⚠️ |
+| UNII-3 | 149-165 | 5735-5835 MHz | 80 MHz | ❌ |
+| WiFi 6E | 1-233 | 5945-6425 MHz | 320 MHz | ❌ |
 
 ## ✅ Estado
 
 - [x] Hostapd LAR patch compilado y probado en kernel 7.1.2-zen3-1-zen
 - [x] 5 GHz funcionando en canal 149 con AX210
 - [x] Dominio regulatorio CL detectado correctamente
-- [ ] Probar con otros kernels/versiones
-- [ ] Probar WiFi 6E (6 GHz)
+- [ ] 80 MHz con LAR activo (depende del firmware)
+- [ ] WiFi 6E (6 GHz)
 
 ## 📚 Referencias
 

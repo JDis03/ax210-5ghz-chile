@@ -65,6 +65,8 @@ hw_mode=a
 channel=149
 ht_capab=[HT40+]
 ieee80211n=1
+ieee80211ac=1
+ieee80211ax=1
 wmm_enabled=1
 ieee80211d=1
 ieee80211h=1
@@ -73,7 +75,12 @@ CONFEOF
 echo "✅ Configuración creada"
 echo "   SSID: $SSID"
 echo "   Canal: 149 (5745 MHz, 5 GHz)"
-echo "   Modo: 802.11a/n/ac/ax"
+echo "   Ancho: 40 MHz (HT40+)"
+echo "   Modo: 802.11a/n/ac/ax (WiFi 6)"
+echo ""
+echo "💡 Para 80 MHz, editar /etc/hostapd/hostapd.conf y agregar:"
+echo "   vht_oper_chwidth=1"
+echo "   vht_oper_centr_freq_seg0_idx=155"
 
 # 6. Backup si existe bridge, si no crear
 if ! ip link show br0 2>/dev/null | grep -q "state UP"; then
