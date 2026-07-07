@@ -29,44 +29,34 @@ cp iwlwifi-lar-disable-zen7.1.2.patch al PKGBUILD de linux-zen
 # Recompilar el kernel con el patch
 ```
 
-## 🚀 Instalación rápida (hostapd)
+## 🚀 Instalación automática
+
+El script `install.sh` hace todo automáticamente:
 
 ```bash
-# 1. Instalar dependencias
-sudo pacman -S --needed git base-devel
+# Clonar
+git clone https://github.com/JDis03/ax210-5ghz-chile.git
+cd ax210-5ghz-chile
 
-# 2. Clonar y compilar
-git clone https://github.com/TU_USUARIO/ax210-5ghz-chile.git
-cd ax210-5ghz-chile/hostapd-lar
+# Ejecutar instalación (te pedirá SSID y contraseña)
+./install.sh
+```
+
+**Qué hace:**
+1. ✅ Compila e instala `hostapd-lar` (reemplaza al official)
+2. ✅ Detecta tu interfaz WiFi automáticamente
+3. ✅ Te pide SSID y contraseña
+4. ✅ Crea `/etc/hostapd/hostapd.conf` con canal 149 (5 GHz)
+5. ✅ Habilita y arranca el servicio systemd
+6. ✅ Muestra verificación final
+
+### Manual
+
+```bash
+cd hostapd-lar
 makepkg -si
-
-# 3. Configurar hostapd para 5 GHz
-sudo tee /etc/hostapd/hostapd.conf << 'EOF'
-interface=wls17
-bridge=br0
-driver=nl80211
-ssid=DarkNet-5G
-country_code=CL
-wpa=2
-wpa_passphrase=DarkLab2024!
-wpa_key_mgmt=WPA-PSK
-rsn_pairwise=CCMP
-auth_algs=1
-macaddr_acl=0
-ignore_broadcast_ssid=0
-hw_mode=a
-channel=149
-ht_capab=[HT40+]
-ieee80211n=1
-wmm_enabled=1
-ieee80211d=1
-ieee80211h=1
-ctrl_interface=/var/run/hostapd
-EOF
-
-# 4. Iniciar hostapd
-sudo systemctl start hostapd
-sudo systemctl enable hostapd
+# luego configurar /etc/hostapd/hostapd.conf manualmente
+sudo systemctl enable --now hostapd
 ```
 
 ## 🔧 Cómo funciona
