@@ -83,37 +83,58 @@ modprobe iwlmvm lar_disable=1
 
 ## ⚙️ Configuraciones recomendadas
 
-### Básica: 5 GHz 40 MHz + WiFi 6 (recomendado)
-Funciona con LAR activo (no requiere parche del kernel). 40 MHz estables.
+### ⭐ Recomendada: 5 GHz 80 MHz (VHT80) + WiFi 6 con bridge
+Configuración probada y funcionando en Chile con LAR activo. No requiere kernel patch.
+`bridge=br0` permite que los clientes WiFi reciban IP del router directamente.
+`noscan=1` evita el OBSS scan que colgaba el proceso en la AX210.
 
 ```conf
+interface=wls17        # cambiar por tu interfaz
+bridge=br0             # bridge de red existente (ver nota abajo)
+driver=nl80211
+ssid=DarkNet-5G
+country_code=CL
+wpa=2
+wpa_passphrase=TuContraseña
+wpa_key_mgmt=WPA-PSK
+rsn_pairwise=CCMP
+auth_algs=1
+macaddr_acl=0
+ignore_broadcast_ssid=0
 hw_mode=a
 channel=149
-ht_capab=[HT40+]
-ieee80211n=1
-ieee80211ac=1
-ieee80211ax=1
-```
-
-### Intermedio: 5 GHz 80 MHz + WiFi 6
-Requiere que el firmware permita 80 MHz en tu región (probado en Chile con LAR
-no siempre lo permite). Si no funciona, usar 40 MHz.
-
-```conf
-hw_mode=a
-channel=149
+noscan=1
 ht_capab=[HT40+]
 vht_oper_chwidth=1
 vht_oper_centr_freq_seg0_idx=155
 ieee80211n=1
 ieee80211ac=1
 ieee80211ax=1
+wmm_enabled=1
+ieee80211d=1
+ctrl_interface=/var/run/hostapd
 ```
 
-### Avanzado: kernel patch + 80/160 MHz
+> **Nota bridge:** `br0` debe existir antes de que inicie hostapd.
+> Crearlo con NetworkManager: `nmcli con add type bridge ifname br0 con-name br0`
+> Agregar tu interfaz ethernet: `nmcli con add type ethernet ifname eth0 master br0`
+
+### Básica: 5 GHz 40 MHz + WiFi 6
+Fallback si 80 MHz no funciona en tu firmware/región.
+
+```conf
+hw_mode=a
+channel=149
+noscan=1
+ht_capab=[HT40+]
+ieee80211n=1
+ieee80211ac=1
+ieee80211ax=1
+```
+
+### Avanzada: kernel patch + 160 MHz
 Desactiva LAR por completo compilando el kernel con
-`iwlwifi-lar-disable-zen7.1.2.patch`. El kernel controla el dominio regulatorio
-y puedes usar cualquier ancho de canal.
+`iwlwifi-lar-disable-zen7.1.2.patch`. Permite 160 MHz y canales DFS sin restricciones.
 
 ```conf
 hw_mode=a
@@ -127,11 +148,11 @@ ieee80211ax=1
 ```
 
 ### WiFi 6E (6 GHz)
-Requiere kernel patch + firmware compatible.
+Requiere kernel patch + firmware compatible. Sin probar.
 
 ```conf
 hw_mode=a
-channel=1                     # canal 6Ghz
+channel=1                     # canal 6GHz
 ht_capab=[HT40+]
 vht_oper_chwidth=1
 vht_oper_centr_freq_seg0_idx=1
