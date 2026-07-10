@@ -1,6 +1,6 @@
 # AX210 5GHz Chile - Estado del Proyecto
 
-> Última actualización: 2026-07-07
+> Última actualización: 2026-07-10
 
 ## 🎯 Objetivo
 Habilitar AP en 5 GHz con tarjeta Intel AX210 en Chile (país CL).
@@ -18,7 +18,9 @@ https://github.com/JDis03/ax210-5ghz-chile
 - **Service:** `hostapd.service` (enabled)
 - **Config:** `/etc/hostapd/hostapd.conf`
 - **Estado:** ✅ Funcionando
-- **AP:** DarkNet-5G, canal 149, 40 MHz, WiFi 6
+- **AP:** DarkNet-5G, canal 149, **80 MHz (VHT80)**, WiFi 6
+- **Bridge:** `bridge=br0` en hostapd.conf (clientes reciben IP del router)
+- **Systemd:** override.conf con `After=NetworkManager-wait-online.service`
 
 ### 2. Kernel patch (alternativa)
 - **Patch:** `iwlwifi-lar-disable-zen7.1.2.patch`
@@ -38,9 +40,15 @@ https://github.com/JDis03/ax210-5ghz-chile
 
 ## 📋 Pendiente
 
+### 🟢 Resuelto hoy (2026-07-10)
+- **80 MHz funciona con LAR activo** — no se necesita kernel patch para VHT80 en canal 149
+- **bridge=br0** en hostapd.conf → clientes reciben IP del router transparentemente
+- **Systemd ordering** — `After=NetworkManager-wait-online.service` garantiza que br0 exista antes de hostapd
+- **Causa del AP invisible**: `ieee80211h=1` sin `ieee80211d=1` + config HE incompleta causaba beacons inválidos. Simplificar la config resolvió el problema.
+
 ### 🔴 Alta prioridad
 
-#### 1. Compilar kernel con patch (para 80/160 MHz)
+#### 1. Compilar kernel con patch (para 160 MHz)
 ```bash
 cd /home/dark/Project/ax210-5ghz-patch
 # Clonar PKGBUILD de linux-zen

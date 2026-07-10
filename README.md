@@ -155,7 +155,9 @@ ieee80211ax=1
 - [x] Hostapd LAR patch compilado y probado en kernel 7.1.2-zen3-1-zen
 - [x] 5 GHz funcionando en canal 149 con AX210
 - [x] Dominio regulatorio CL detectado correctamente
-- [ ] 80 MHz con LAR activo (depende del firmware)
+- [x] **80 MHz (VHT80) con LAR activo** — funciona en UNII-3 (canal 149, centr_idx=155)
+- [x] Bridge `br0` — clientes reciben IP del router directamente
+- [ ] 160 MHz (requiere kernel patch)
 - [ ] WiFi 6E (6 GHz)
 
 ## 📚 Referencias
