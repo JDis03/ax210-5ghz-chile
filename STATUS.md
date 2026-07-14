@@ -1,6 +1,6 @@
 # AX210 5GHz Chile - Estado del Proyecto
 
-> Última actualización: 2026-07-10
+> Última actualización: 2026-07-14
 
 ## 🎯 Objetivo
 Habilitar AP en 5 GHz con tarjeta Intel AX210 en Chile (país CL).
@@ -18,7 +18,8 @@ https://github.com/JDis03/ax210-5ghz-chile
 - **Service:** `hostapd.service` (enabled)
 - **Config:** `/etc/hostapd/hostapd.conf`
 - **Estado:** ✅ Funcionando
-- **AP:** DarkNet-5G, canal 149, **80 MHz (VHT80)**, WiFi 6
+- **AP:** DarkNet (2.4 GHz) canal 13, HT40- (40 MHz), Wi-Fi 6
+- **AP (prev):** DarkNet-5G, canal 149, **80 MHz (VHT80)**, WiFi 6
 - **Bridge:** `bridge=br0` en hostapd.conf (clientes reciben IP del router)
 - **Systemd:** override.conf con `After=NetworkManager-wait-online.service`
 
@@ -45,6 +46,7 @@ https://github.com/JDis03/ax210-5ghz-chile
 - **bridge=br0** en hostapd.conf → clientes reciben IP del router transparentemente
 - **Systemd ordering** — `After=NetworkManager-wait-online.service` garantiza que br0 exista antes de hostapd
 - **Causa del AP invisible**: `ieee80211h=1` sin `ieee80211d=1` + config HE incompleta causaba beacons inválidos. Simplificar la config resolvió el problema.
+- **2.4 GHz ULTRA**: canal 13 (2472 MHz), HT40- (40 MHz), Wi-Fi 6, Short GI, MAX-AMSDU, `noscan=1` — config probada y estable.
 
 ### 🔴 Alta prioridad
 

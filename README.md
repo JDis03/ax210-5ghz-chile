@@ -119,6 +119,35 @@ ctrl_interface=/var/run/hostapd
 > Crearlo con NetworkManager: `nmcli con add type bridge ifname br0 con-name br0`
 > Agregar tu interfaz ethernet: `nmcli con add type ethernet ifname eth0 master br0`
 
+### 🌟 2.4 GHz ULTRA (canal 13 + HT40 + Wi-Fi 6)
+Configuración probada para máxima estabilidad y cobertura en 2.4 GHz.
+Canal 13 (2472 MHz) es el más alto disponible en Chile.
+HT40- da 40 MHz de ancho. Recomendada si 5 GHz no es estable.
+
+```conf
+interface=wls17
+bridge=br0
+driver=nl80211
+ssid=DarkNet
+country_code=CL
+wpa=2
+wpa_passphrase=DarkLab2024!
+wpa_key_mgmt=WPA-PSK
+rsn_pairwise=CCMP
+auth_algs=1
+macaddr_acl=0
+ignore_broadcast_ssid=0
+hw_mode=g
+channel=13
+noscan=1
+ht_capab=[HT40-][SHORT-GI-20][SHORT-GI-40][MAX-AMSDU-7935]
+ieee80211n=1
+ieee80211ax=1
+wmm_enabled=1
+ieee80211d=1
+ctrl_interface=/var/run/hostapd
+```
+
 ### Básica: 5 GHz 40 MHz + WiFi 6
 Fallback si 80 MHz no funciona en tu firmware/región.
 
